@@ -39,7 +39,7 @@ new_node->next = latest->next;
 latest->next = new_node;
 return (new_node);
 }
-latest = latestt->next;
+latest = latest->next;
 count++;
 }
 

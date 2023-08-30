@@ -29,7 +29,7 @@ while (latest != NULL)
 {
 if (count == index - 1)
 {
-if (latest->next == NULL)
+if (latestt->next == NULL)
 return (-1);
 
 temp = latest->next;
