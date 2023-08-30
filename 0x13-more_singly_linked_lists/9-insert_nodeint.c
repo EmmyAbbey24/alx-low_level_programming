@@ -43,5 +43,6 @@ latest = latest->next;
 count++;
 }
 
-free(new_node);return (NULL);
+free(new_node);
+return (NULL);
 }
