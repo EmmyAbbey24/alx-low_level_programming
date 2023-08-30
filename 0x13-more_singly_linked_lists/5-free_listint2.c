@@ -13,7 +13,7 @@ return;
 
 latest = *head;
 
-while (current != NULL)
+while (latest != NULL)
 {
 temp = latest;
 latest = latest->next;
