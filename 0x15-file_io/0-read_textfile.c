@@ -29,7 +29,7 @@ if (!buf)
 return (0);
 
 rd = read(fd, buf, letters);
-wt = write(STDOUT_FILENO, buf, nrd);
+wt = write(STDOUT_FILENO, buf, rd);
 
 close(fd);
 free(buf);
