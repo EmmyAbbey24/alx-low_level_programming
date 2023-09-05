@@ -1,64 +1,86 @@
+#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdarg.h>
 
-#define BUFFER_SIZE 1024
+char *create_buffer(void);
+void close_file(int fd);
+void error_exit(const char *message, int exit_code, ...);
+
+/**
+ * create_buffer - Allocates a 1024-byte buffer.
+ *
+ * Return: A pointer to the newly-allocated buffer.
+ */
+char *create_buffer(void)
+{
+char *buffer = malloc(1024);
+
+if (buffer == NULL)
+{
+error_exit("Error: Can't allocate memory\n", 99);
+}
+
+return buffer;
+}
+
+/**
+ * close_file - Closes a file descriptor.
+ * @fd: The file descriptor to be closed.
+ */
+void close_file(int fd)
+{
+if (close(fd) == -1)
+{
+error_exit("Error: Can't close fd %d\n", 100, fd);
+}
+}
 
 /**
  * error_exit - Print an error message to stderr and exit with the given code.
- * @code: The exit code.
- * @format: The format string for the error message.
- * @...: Additional arguments to format.
+ * @message: The error message format.
+ * @exit_code: The exit code.
+ * @...: Additional arguments for the error message.
  */
-void error_exit(int code, const char *format, ...)
+void error_exit(const char *message, int exit_code, ...)
 {
 va_list args;
-va_start(args, format);
-dprintf(STDERR_FILENO, format, args);
+va_start(args, exit_code);
+vfprintf(stderr, message, args);
 va_end(args);
-exit(code);
+exit(exit_code);
 }
 
-/**
- * main - Copy the content of one file to another.
- * @argc: The number of command-line arguments.
- * @argv: An array of command-line argument strings.
- * Return: 0 on success, or an exit code on failure.
- */
 int main(int argc, char *argv[])
 {
-int file_from, file_to;
-ssize_t bytes_read, bytes_written;
-char buffer[BUFFER_SIZE];
+int from, to, r, w;
+char *buffer;
 
 if (argc != 3)
-error_exit(97, "Usage: cp file_from file_to\n");
-
-file_from = open(argv[1], O_RDONLY);
-if (file_from == -1)
-error_exit(98, "Error: Can't read from file %s\n", argv[1]);
-
-file_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
-if (file_to == -1)
-error_exit(99, "Error: Can't write to %s\n", argv[2]);
-
-while ((bytes_read = read(file_from, buffer, BUFFER_SIZE)) > 0)
 {
-bytes_written = write(file_to, buffer, bytes_read);
-if (bytes_written == -1 || bytes_written != bytes_read)
-error_exit(99, "Error: Can't write to %s\n", argv[2]);
+error_exit("Usage: cp file_from file_to\n", 97);
 }
 
-if (bytes_read == -1)
-error_exit(98, "Error: Can't read from file %s\n", argv[1]);
+buffer = create_buffer();
+from = open(argv[1], O_RDONLY);
+to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 
-if (close(file_from) == -1)
-error_exit(100, "Error: Can't close fd %d\n", file_from);
+while ((r = read(from, buffer, 1024)) > 0)
+{
+if (from == -1 || r == -1)
+{
+error_exit("Error: Can't read from file %s\n", 98, argv[1]);
+}
 
-if (close(file_to) == -1)
-error_exit(100, "Error: Can't close fd %d\n", file_to);
+w = write(to, buffer, r);
+if (to == -1 || w == -1)
+{
+error_exit("Error: Can't write to %s\n", 99, argv[2]);
+}
+}
 
-return (0);
+free(buffer);
+close_file(from);
+close_file(to);
+
+return 0;
 }
