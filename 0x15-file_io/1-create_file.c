@@ -22,7 +22,8 @@ return (-1);
 if (!text_content)
 text_content = "";
 
-for (num_letters = 0; text_content[num_letters]; num_letters++);
+for (num_letters = 0; text_content[num_letters]; num_letters++)
+;
 
 rwt = write(fd, text_content, num_letters);
 
