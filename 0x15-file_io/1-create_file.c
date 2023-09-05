@@ -1,17 +1,15 @@
 #include "main.h"
 
 /**
- * create_file - creates a file
- * @filename: filename.
- * @text_content: content writed in the file.
+ * create_file - creates a file and write text content to it
+ * @filename: name of the file to create
+ * @text_content: content to be written to the file (NULL-terminated string)
  *
- * Return: 1 if it success. -1 if it fails.
+ * Return: 1 on success, -1 on failure
  */
 int create_file(const char *filename, char *text_content)
 {
-int fd;
-int nletters;
-int rwr;
+int fd, num_letters, rwt;
 
 if (!filename)
 return (-1);
@@ -24,14 +22,16 @@ return (-1);
 if (!text_content)
 text_content = "";
 
-for (nletters = 0; text_content[nletters]; nletters++);
+for (num_letters = 0; text_content[num_letters]; num_letters++);
 
-rwr = write(fd, text_content, nletters);
+rwt = write(fd, text_content, num_letters);
 
-if (rwr == -1)
+if (rwt == -1)
+{
+close(fd);
 return (-1);
+}
 
 close(fd);
-
 return (1);
 }
