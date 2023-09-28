@@ -3,7 +3,7 @@
 /**
  * get_bit - Gets the value of a bit at a given index.
  * @n: The unsigned long int to extract the bit from.
- * @index: The index of the bit to be extracted, starting from 0.
+ * @i: The index of the bit to be extracted, starting from 0.
  *
  * Return: The value of the bit at index or -1 on error.
  */
