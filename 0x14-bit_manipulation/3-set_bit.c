@@ -2,7 +2,7 @@
 
 /**
  * set_bit - Sets the value of a bit to 1 at a given index.
- * @num_ptr: Pointer to the unsigned long int whose bit needs to be set.
+ * @n: Pointer to the unsigned long int whose bit needs to be set.
  * @bit_index: The index of the bit to be set, starting from 0.
  *
  * Return: 1 if successful, -1 on error.
